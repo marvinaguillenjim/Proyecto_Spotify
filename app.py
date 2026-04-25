@@ -102,7 +102,8 @@ try:
     # --- SIDEBAR (Interactividad) ---
     st.sidebar.header("Configuración")
     album_list = ["Todos"] + list(df_app['album'].unique())
-    selected_album = st.sidebar.selectbox("Selecciona un Álbum:", album_list)
+    #selected_album = st.sidebar.selectbox("Selecciona un Álbum:", album_list)
+    otro_album = st.selectbox("Selecciona un Álbum:", album_list, key="filtro_comparativa")
 
     if selected_album != "Todos":
         display_df = df_app[df_app['album'] == selected_album]
