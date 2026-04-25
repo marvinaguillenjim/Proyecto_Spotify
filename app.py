@@ -17,8 +17,7 @@ y analizar sus letras mediante la API de `lyrics.ovh`.
 @st.cache_data
 def load_data():
     # Aquí cargamos el dataset que usaste en Colab
-    df = pd.read_csv('tracks_features.csv') 
-    
+    df = pd.read_csv('radiohead_tracks.csv')
     # PUNTO 1: FILTRADO DE ÁLBUMES DE ESTUDIO
     TARGET_ARTIST_ID = '4Z8W4fKeB5YxbusRsdQVPb'
     STUDIO_ALBUMS = [
