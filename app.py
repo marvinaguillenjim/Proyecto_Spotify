@@ -2,8 +2,62 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import plotly.express as px
+import plotly.graph_objects as go
 import requests
 
+# 2. CARGA DE DATOS (Lo que ya tienes)
+df_app = pd.read_csv('radiohead_tracks.csv')
+AUDIO_FEATURES = ['acousticness', 'danceability', 'energy', 'instrumentalness', 'liveness', 'loudness', 'speechiness', 'tempo', 'valence']
+
+# 3. FILTRO LATERAL (Sidebar)
+selected_album = st.sidebar.selectbox("Selecciona un Álbum:", ["Todos"] + list(df_app['album'].unique()))
+display_df = df_app if selected_album == "Todos" else df_app[df_app['album'] == selected_album]
+
+# ---------------------------------------------------------
+# 4. AQUÍ VAN LOS CAMBIOS (Nuevos Gráficos)
+# ---------------------------------------------------------
+st.header("📊 Análisis Avanzado de Radiohead")
+
+# Creamos las pestañas para organizar el contenido
+tab1, tab2, tab3 = st.tabs(["🎯 Comparativa de Radar", "🔥 Correlaciones", "🎈 Popularidad"])
+
+with tab1:
+    st.subheader("La 'Huella' Sonora de los Álbumes")
+    # Lógica del gráfico de Radar que te pasé antes...
+    features_radar = ['energy', 'danceability', 'valence', 'acousticness', 'speechiness']
+    df_radar = df_app.groupby('album')[features_radar].mean().reset_index()
+    
+    col_a, col_b = st.columns(2)
+    alb1 = col_a.selectbox("Álbum A:", df_radar['album'].unique(), index=0)
+    alb2 = col_b.selectbox("Álbum B:", df_radar['album'].unique(), index=2)
+    
+    fig_radar = go.Figure()
+    for alb in [alb1, alb2]:
+        fig_radar.add_trace(go.Scatterpolar(
+            r=df_radar[df_radar['album'] == alb][features_radar].values.flatten(),
+            theta=features_radar, fill='toself', name=alb
+        ))
+    fig_radar.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 1])))
+    st.plotly_chart(fig_radar, use_container_width=True)
+
+with tab2:
+    st.subheader("Mapa de Calor de Atributos")
+    fig_corr, ax_corr = plt.subplots()
+    sns.heatmap(display_df[AUDIO_FEATURES].corr(), annot=True, cmap='coolwarm', ax=ax_corr)
+    st.pyplot(fig_corr)
+
+with tab3:
+    st.subheader("Hits vs. Atributos")
+    fig_bubble = px.scatter(display_df, x="valence", y="energy", size="popularity", 
+                            color="album", hover_name="name")
+    st.plotly_chart(fig_bubble, use_container_width=True)
+
+# ---------------------------------------------------------
+# 5. SECCIÓN DE LETRAS (Al final de todo)
+# ---------------------------------------------------------
+st.divider()
+st.header("🔍 Buscador de Letras")
 # Configuración de la página
 st.set_page_config(page_title="Radiohead Data Explorer", layout="wide")
 
