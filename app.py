@@ -48,7 +48,7 @@ with tab2:
     st.pyplot(fig_corr)
 
 with tab3:
-   st.subheader("Hits vs. Atributos")
+    st.subheader("Hits vs. Atributos")
     
     # --- SOLUCIÓN: Creamos una copia para no romper el original y sumamos 1 ---
     # Esto asegura que el tamaño mínimo sea 1 y no 0
