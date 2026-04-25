@@ -59,7 +59,6 @@ with tab3:
         temp_df, 
         x="valence", 
         y="energy", 
-        size="popularity_size",  # Usamos la nueva columna con valores > 0
         color="album", 
         hover_name="name",
         # Añadimos esto para que las burbujas no se vean minúsculas
